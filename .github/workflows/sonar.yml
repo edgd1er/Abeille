@@ -34,5 +34,6 @@ jobs:
         #with:
           # Additional arguments to the sonarcloud scanner
           #projectBaseDir: .
-          #args: # optional
+          args: >
+             -Dproject.settings=./sonar.properties
           # Set the sonar.projectBaseDir analysis property  
