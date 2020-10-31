@@ -20,12 +20,12 @@ jobs:
 
         # Steps represent a sequence of tasks that will be executed as part of the job
         steps:
-            - set locale
+            - name: set locale
               run: |
-                  - locale -a
-                  - sudo locale-gen fr_FR.UTF-8
-                  - update-locale LANG=fr_FR.UTF-8
-                  - export LANG=fr_FR.UTF-8
+                locale -a
+                sudo locale-gen fr_FR.UTF-8
+                update-locale LANG=fr_FR.UTF-8
+                export LANG=fr_FR.UTF-8
             # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
             -   uses: actions/checkout@v2
                 # Disabling shallow clone is recommended for improving relevancy of reporting
