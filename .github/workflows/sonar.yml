@@ -31,7 +31,7 @@ jobs:
                 env:
                     GITHUB_TOKEN: ${{ secrets.GH_TOKEN_FOR_SONAR }}
                     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-                      #with:
+                with:
                       # Additional arguments to the sonarcloud scanner
                       # Set the sonar.projectBaseDir analysis property
                       #projectBaseDir: .
