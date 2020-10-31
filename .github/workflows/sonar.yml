@@ -37,15 +37,5 @@ jobs:
                       #projectBaseDir: .
                     # optional
                     args: >
-                        -Dsonar.host.url=https://sonarcloud.io
-                        -Dsonar.organization=edgd1er
-                        -Dsonar.projectKey=edgd1er_Abeille
-                        -Dsonar.projectName=Abeille
-                        -Dsonar.sources=.
-                        -Dsonar.sourceEncoding=UTF-8
-                        -Dsonar.exclusions=3rdparty/**/*,images/**,tests/**/*,docs/**/*,core/config/devices/
-                        -Dsonar.links.homepage=https://github.com/edgd1er/Abeille
-                        -Dsonar.links.ci=https://github.com/edgd1er/Abeille/actions
-                        -Dsonar.links.issue=https://github.com/edgd1re/Abeille/issues
                         -Dfile.encoding=UTF-8
                         -Dsun.jnu.encoding=UTF-8
