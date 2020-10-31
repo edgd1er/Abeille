@@ -32,7 +32,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_FOR_SONAR }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         #with:
-          # Additional arguments to the sonarcloud scanner
-          #projectBaseDir: .
-          #args: # optional
-          # Set the sonar.projectBaseDir analysis property  
+            # Additional arguments to the sonarcloud scanner
+            # Set the sonar.projectBaseDir analysis property
+            #projectBaseDir: .
+            # optional
+          args: >
+                  -Dfile.encoding=UTF-8
+                    -Dsun.jnu.encoding=UTF-8
