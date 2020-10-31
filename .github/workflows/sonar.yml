@@ -24,7 +24,7 @@ jobs:
               run: |
                 locale -a
                 sudo locale-gen fr_FR.UTF-8
-                update-locale LANG=fr_FR.UTF-8
+                sudo update-locale LANG=fr_FR.UTF-8
                 export LANG=fr_FR.UTF-8
             # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
             -   uses: actions/checkout@v2
