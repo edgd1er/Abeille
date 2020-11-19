@@ -1,14 +1,14 @@
 {
-  "LCA001": {
-    "nameJeedom": "ampoule philips hue couleur",
+  "GL-MC-001": {
+    "nameJeedom": "GLEDOPTO RGT+CCT LED Controller",
     "timeout": "60",
-    "Comment": "",
+    "Comment": "GL-MC-001 - ruban led GLEDOPTO #1402",
     "Categorie": {
       "light": "1"
     },
     "configuration": {
-      "uniqId": "5c07592627bb7",
-      "icone": "LCT015",
+      "uniqId": "5c07c296sqsjh278aqsh7",
+      "icone": "GL-MC-001",
       "mainEP": "0B",
       "poll": "1"
     },
@@ -24,6 +24,11 @@
       "include7": "Off",
       "include8": "Toggle",
       "include11 2": "setLevel",
+      "include37": "2200K",
+      "include38": "2700K",
+      "include39": "4000K",
+      "include40": "temperatureLight",
+      "include40 2 2": "setTemperatureLight",
       "include12 2": "Colour",
       "include13 2": "Blanc",
       "include14 2": "Bleu",
@@ -38,6 +43,7 @@
       "include15": "getSWBuild",
       "include16": "Identify",
       "include25": "Group-Membership",
+      "include25 2": "Scene-Membership",
       "include26": "BindToZigateEtat",
       "include27": "BindToZigateLevel",
       "include28": "setReportEtat",
@@ -50,12 +56,7 @@
       "include33": "colorVert",
       "include34": "setVert",
       "include35": "colorBleu",
-      "include36": "setBleu",
-      "include37": "2200K",
-      "include38": "2700K",
-      "include39": "4000K",
-      "include40": "temperatureLight",
-      "include40 2 2": "setTemperatureLight"
+      "include36": "setBleu"
     }
   }
 }

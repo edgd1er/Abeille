@@ -27,11 +27,7 @@
     include_once __DIR__.'/../../resources/AbeilleDeamon/lib/Tools.php';
     include_once __DIR__.'/../php/AbeilleLog.php'; // Abeille log features
 
-
-    $profileTable = array (
-                           'C05E'=>'ZLL Application Profile',
-                           '0104'=>'ZigBee Home Automation (ZHA)',
-                           );
+    include_once __DIR__.'/../php/AbeilleZigateConst.php'; // Zigate constants
 
     $deviceInfo = array (
                          'C05E' => array(
@@ -248,74 +244,6 @@
                      "F4" => array( "MAC_ENUM_UNSUPPORTED_ATTRIBUTE", "PIB Set/Get on unsupported attribute", ),
                      );
 
-    /* Type and name of zigate messages (mainly those currently unsupported) */
-    $zigateMessages = array(
-        "8001" => "Log message",
-        "8002" => "Data indication",
-        "8006" => "Non “Factory new” Restart",
-        "8007" => "“Factory New” Restart",
-        "8009" => "Network State Response",
-        "8028" => "Authenticate response",
-        "802B" => "User Descriptor Notify",
-        "802C" => "User Descriptor Response",
-        "8031" => "Unbind response",
-        "8034" => "Complex Descriptor response",
-        "8035" => "PDM event code",
-        "8042" => "Node Descriptor response",
-        "8044" => "Power Descriptor response",
-        "8046" => "Match Descriptor response",
-        "8047" => "Management Leave response",
-        "804B" => "System Server Discovery response",
-        "8061" => "View Group response",
-        "80A1" => "Add Scene response",
-        "80A2" => "Remove Scene response",
-        "8110" => "Write Attribute Response",
-        "8140" => "Configure Reporting response",
-        "8401" => "Zone status change notification",
-        "8531" => "Complex Descriptor response",
-    );
-
-    /* Returns Zigate message name based on given '$msgType' */
-    function getZigateMsgByType($msgType)
-    {
-        global $zigateMessages;
-
-        if (array_key_exists($msgType, $zigateMessages))
-            return $zigateMessages[$msgType];
-        return "Message inconnu";
-    }
-
-    /* PDM event codes & desc.
-       Returned by command 0x8035 */
-    $zigatePDMEvents = array(
-        "00" => "WEAR_COUNT_TRIGGER_VALUE_REACHED",
-        "01" => "DESCRIPTOR_SAVE_FAILED",
-        "02" => "PDM_NOT_ENOUGH_SPACE",
-        "03" => "LARGEST_RECORD_FULL_SAVE_NO_LONGER_POSSIBLE",
-        "04" => "SEGMENT_DATA_CHECKSUM_FAIL",
-        "05" => "SEGMENT_SAVE_OK",
-        "06" => "EEPROM_SEGMENT_HEADER_REPAIRED",
-        "07" => "SYSTEM_INTERNAL_BUFFER_WEAR_COUNT_SWAP",
-        "08" => "SYSTEM_DUPLICATE_FILE_SEGMENT_DETECTED",
-        "09" => "SYSTEM_ERROR",
-        "0A" => "SEGMENT_PREWRITE",
-        "0B" => "SEGMENT_POSTWRITE",
-        "0C" => "SEQUENCE_DUPLICATE_DETECTED",
-        "0D" => "SEQUENCE_VERIFY_FAIL",
-        "0E" => "PDM_SMART_SAVE",
-        "0F" => "PDM_FULL_SAVE"
-    );
-
-    /* Returns Zigate PDM event desc based on given '$code' */
-    function getZigatePDMEvent($code)
-    {
-        global $zigatePDMEvents;
-
-        if (array_key_exists($code, $zigatePDMEvents))
-            return $zigatePDMEvents[$code];
-        return "Code PDM ".$code." inconnu";
-    }
-
     $allErrorCode = $event + $zdpCode + $apsCode + $nwkCode + $macCode;
 
     class debug {
@@ -490,7 +418,7 @@
             }
         }
 
-        function mqqtPublishFct( $SrcAddr, $fct, $data)
+        function mqqtPublishFct($SrcAddr, $fct, $data)
         {
             // $SrcAddr = dest / shortaddr
             // dest / short addr / Cluster ID - Attr ID -> data
@@ -882,7 +810,7 @@
             if ( method_exists($this, $fct) ) {
                 $this->$fct($dest, $payload, $ln, $qos, $param1); }
             else {
-                $msgName = getZigateMsgByType($type);
+                $msgName = zgGetMsgByType($type);
                 $this->deamonlog('debug', $dest.', Type='.$type.'/'.$msgName.', ignoré (non supporté).');
             }
 
@@ -927,8 +855,8 @@
                 $Rejoin = "";
 
             $msgDecoded = '004d/Device announce'.', Addr='.$Addr.', ExtAddr='.$IEEE.', MACCapa='.$MACCapa;
-            if ($Rejoin != "")
-                $msgDecoded .= ', Rejoin='.$Rejoin;
+            if ($Rejoin != "") $msgDecoded .= ', Rejoin='.$Rejoin;
+            $msgDecoded .= ', [Modelisation]';
             $this->deamonlog('debug', $dest.', Type='.$msgDecoded);
 
             // Envoie de la IEEE a Jeedom qui le processera dans la cmd de l objet si celui ci existe deja, sinon sera drop
@@ -943,9 +871,9 @@
             if ($Rejoin == "02") return;
 
             if ( config::byKey( 'blocageTraitementAnnonce', 'Abeille', 'Non', 1 ) == "Oui" ) return;
-            
+
             if ( Abeille::checkInclusionStatus( $dest ) != "01" ) return;
-            
+
             $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/ActiveEndPoint",                  "address=".$Addr );
             $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+2), "address=".$Addr );
             $this->mqqtPublishFctToCmd("TempoCmd".$dest."/Ruche/ActiveEndPoint&time=".(time()+4), "address=".$Addr );
@@ -1196,7 +1124,7 @@
 
                 $frameCtrlField         = substr($payload,26, 2);
                 $SQN                    = substr($payload,28, 2);
-                $cmd                    = substr($payload,30, 2); if ( $cmd != "fd" ) return;
+                $cmd                    = substr($payload,30, 2); if ( $cmd != "FD" ) return;
                 $value                  = substr($payload,32, 2);
 
                 $this->deamonlog('debug', $dest.', Type=8002/Data indication'
@@ -1561,7 +1489,7 @@
             $this->deamonlog('debug', $dest.', Type=8035/PDM event code'
                              .', PDMEvtCode=x'.$PDMEvtCode
                              .', RecId='.$RecId
-                             .' => '.getZigatePDMEvent($PDMEvtCode));
+                             .' => '.zgGetPDMEvent($PDMEvtCode));
         }
 
         function decode8040($dest, $payload, $ln, $qos, $dummy)
@@ -1646,7 +1574,6 @@
             // <Out cluster list: data each entry is uint16_t> -> 4
             // Bit fields: Device version: 4 bits (bits 0-4) Reserved: 4 bits (bits4-7)
 
-            global $profileTable;
             global $deviceInfo;
 
             $SrcAddr    = substr($payload, 4, 4);
@@ -1656,22 +1583,24 @@
             $InClusterCount = substr($payload,22, 2); // Number of input clusters
 
             $this->deamonlog('debug', $dest.', Type=8043/Simple descriptor response'
-                             . ', SQN='             .substr($payload, 0, 2)
-                             . ', Status='          .substr($payload, 2, 2)
-                             . ', ShortAddr='       .substr($payload, 4, 4)
-                             . ', Length='          .substr($payload, 8, 2)
-                             . ', EndPoint='        .substr($payload,10, 2)
-                             . ', Profile='         .substr($payload,12, 4) . ' (' . $profileTable[substr($payload,12, 4)] . ')'
-                             . ', DeviceId='        .substr($payload,16, 4) . ' (' . $deviceInfo[$profile][$deviceId] .')'
-                             . ', BitField='        .substr($payload,20, 2));
+                             . ', SQN='         .substr($payload, 0, 2)
+                             . ', Status='      .substr($payload, 2, 2)
+                             . ', Addr='        .$SrcAddr
+                             . ', Length='      .substr($payload, 8, 2)
+                             . ', EP='          .$EPoint
+                             . ', Profile='     .$profile.'/'.$zgGetProfile($profile).')'
+                             . ', DevId='       .$deviceId.' ('.$deviceInfo[$profile][$deviceId] .')'
+                             . ', BitField='    .substr($payload,20, 2))
+                             . ', [Modelisation]'
+                             ;
 
-            $this->deamonlog('debug','  InClusterCount='.$InClusterCount);
+            $this->deamonlog('debug','  [Modelisation] InClusterCount='.$InClusterCount);
             for ($i = 0; $i < (intval(substr($payload, 22, 2)) * 4); $i += 4) {
-                $this->deamonlog('debug', '  InCluster='.substr($payload, (24 + $i), 4). ' - ' . $clusterTab['0x'.substr($payload, (24 + $i), 4)]);
+                $this->deamonlog('debug', ' [Modelisation] InCluster='.substr($payload, (24 + $i), 4). ' - ' . $clusterTab['0x'.substr($payload, (24 + $i), 4)]);
             }
-            $this->deamonlog('debug','  OutClusterCount='.substr($payload,24+$i, 2));
+            $this->deamonlog('debug','  [Modelisation] OutClusterCount='.substr($payload,24+$i, 2));
             for ($j = 0; $j < (intval(substr($payload, 24+$i, 2)) * 4); $j += 4) {
-                $this->deamonlog('debug', '  OutCluster='.substr($payload, (24 + $i +2 +$j), 4) . ' - ' . $clusterTab['0x'.substr($payload, (24 + $i +2 +$j), 4)]);
+                $this->deamonlog('debug', ' [Modelisation] OutCluster='.substr($payload, (24 + $i +2 +$j), 4) . ' - ' . $clusterTab['0x'.substr($payload, (24 + $i +2 +$j), 4)]);
             }
 
             $data = 'zigbee'.$deviceInfo[$profile][$deviceId];
@@ -1697,7 +1626,9 @@
                              . ', Status='          .substr($payload, 2, 2)
                              . ', ShortAddr='       .substr($payload, 4, 4)
                              . ', EndPointCount='   .substr($payload, 8, 2)
-                             . ', EndPointList='    .$endPointList             );
+                             . ', EndPointList='    .$endPointList
+                             . ', [Modelisation]'
+                            );
 
             $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/getName",                                     "address=".$SrcAddr.'&destinationEndPoint='.$EP );
             $this->mqqtPublishFctToCmd(     "Cmd".$dest."/Ruche/getLocation",                                 "address=".$SrcAddr.'&destinationEndPoint='.$EP );
@@ -1710,6 +1641,7 @@
             $this->actionQueue[] = array( 'when'=>time()+11, 'what'=>'getNE',       'addr'=>$dest.'/'.$SrcAddr );
         }
 
+        /* 8048/Leave indication */
         function decode8048($dest, $payload, $ln, $qos, $dummy)
         {
             $IEEE = substr($payload, 0, 16);
@@ -2346,18 +2278,19 @@
                 $msg = '8100/Read individual attribute response';
             else
                 $msg = '8102/Attribut report';
-            $msg .= ', SQN='             .$SQN
-                    .', Addr='         .$SrcAddr
-                    .', EP='        .$EPoint
-                    .', ClustId='         .$ClusterId
-                    .', AttrId='          .$AttributId
-                    .', AttrStatus='      .$AttributStatus
-                    .', AttrDataType='    .$dataType
-                    .', AttrSize='        .$AttributSize;
+                $msg .= ', SQN='            .$SQN
+                        .', Addr='          .$SrcAddr
+                        .', EP='            .$EPoint
+                        .', ClustId='       .$ClusterId
+                        .', AttrId='        .$AttributId
+                        .', AttrStatus='    .$AttributStatus
+                        .', AttrDataType='  .$dataType
+                        .', AttrSize='      .$AttributSize;
             // 0005: ModelIdentifier
             // 0010: Piece (nom utilisé pour Profalux)
             if ( ($ClusterId=="0000") && ( ($AttributId=="0005") || ($AttributId=="0010") ) ) {
                 $msg .= ', DataByteList='.pack('H*', substr($payload, 24, (strlen($payload) - 24 - 2)));
+                $msg .= ', [Modelisation]';
             } else {
                 $msg .= ', DataByteList='.substr($payload, 24, (strlen($payload) - 24 - 2));
             }
@@ -3542,7 +3475,7 @@
         public static function execAtCreationCmdForOneNE($address) {
             $cmds = AbeilleCmd::searchConfigurationEqLogic( Abeille::byLogicalId( $address,'Abeille')->getId(), 'execAtCreation', 'action' );
             foreach ( $cmds as $key => $cmd ) {
-                $this->deamonlog('debug', 'execAtCreationCmdForOneNE: '.$cmd->getName().' - '.$cmd->getConfiguration('execAtCreation').' - '.$cmd->getConfiguration('execAtCreationDelay') );
+                self::deamonlog('debug', 'execAtCreationCmdForOneNE: '.$cmd->getName().' - '.$cmd->getConfiguration('execAtCreation').' - '.$cmd->getConfiguration('execAtCreationDelay') );
                 Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time()+$cmd->getConfiguration('PollingOnCmdChangeDelay')), $cmd->getConfiguration('request') );
             }
         }
@@ -3633,10 +3566,8 @@
         while (true) {
 
             if (msg_receive( $queueKeySerieToParser, 0, $msg_type, $max_msg_size, $dataJson, false, MSG_IPC_NOWAIT)) {
-                // $AbeilleParser->deamonlog( 'debug', "Message pulled from queue queueKeySerieToParser: ".json_encode($data) );
-
+                // $AbeilleParser->deamonlog( 'debug', 'Message pulled from queue queueKeySerieToParser: '.$dataJson );
                 $data = json_decode( $dataJson );
-                // $AbeilleParser->deamonlog( 'debug', 'Message: '.$dataJson );
                 $AbeilleParser->protocolDatas( $data->dest, $data->trame, 0, $clusterTab, $LQI );
             }
             // $AbeilleParser->processAnnonce($NE);
