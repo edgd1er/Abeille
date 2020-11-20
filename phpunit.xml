@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" colors="true" bootstrap="core/autoload.inc.php"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+    <!--coverage cacheDirectory="./tmp/phpunitCache/"
+              includeUncoveredFiles="true"
+              processUncoveredFiles="true"
+              pathCoverage="false"
+              ignoreDeprecatedCodeUnits="true"
+              disableCodeCoverageIgnore="true">
+        <report>
+            <clover outputFile="tests/reports/codeCoverage/clover.xml"/>
+            <crap4j outputFile="tests/reports/codeCoverage/crap4j.xml" threshold="50"/>
+            <html outputDirectory="tests/reports/codeCoverage" lowUpperBound="35" highLowerBound="70"/>
+            <php outputFile="tests/reports/codeCoverage/coverage.php"/>
+            <text outputFile="tests/reports/codeCoverage/coverage.txt" showUncoveredFiles="false"
+                  showOnlySummary="false"/>
+            <xml outputDirectory="tests/reports/codeCoverage/xml-coverage"/>
+        </report>
+        <include>
+            <directory suffix=".php">.</directory>
+        </include>
+        <exclude>
+            <directory suffix=".php">tests</directory>
+            <directory suffix=".php">tmp</directory>
+        </exclude>
+    </coverage-->
+    <!--logging>
+        <junit outputFile="tests/reports/junit/junit.xml"/>
+        <text outputFile="tests/reports/logfile.txt"/>
+    </logging-->
+    <testsuites>
+        <testsuite name="AbeilleSuite">
+            <directory>tests/</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
