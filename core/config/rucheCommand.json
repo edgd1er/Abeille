@@ -76,6 +76,32 @@
             "forceReturnLineAfter": "1"
         }
     },
+    "Set inclusion mode": {
+        "name": "Set inclusion mode",
+        "comment": "Readded this function for case #2476",
+        "isHistorized": "0",
+        "isVisible": "1",
+        "Type": "action",
+        "subType": "other",
+        "configuration": {
+            "topic": "zgSetPermitMode",
+            "request": "mode=start"
+        }
+    },
+    "Get Inclusion Status": {
+        "name": "Get Inclusion Status",
+        "isHistorized": "0",
+        "isVisible": "1",
+        "Type": "action",
+        "subType": "other",
+        "configuration": {
+            "topic": "permitJoin",
+            "request": "Status"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        }
+    },
     "storeScene": {
         "name": "storeScene",
         "isVisible": "0",
