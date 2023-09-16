@@ -19,6 +19,11 @@ if [ ${NBARGS} -ne 1 ]; then
     exit 1
 fi
 
+if [ -f /.dockerenv ] ; then
+  echo "Running inside docker, no kernel message available, exiting"
+  exit 0
+fi
+
 FULLDEV=$1
 echo "USB port : $FULLDEV"
 
