@@ -19,7 +19,8 @@
                 "template": "door",
                 "genericType": "OPENING",
                 "invertBinary": "1",
-                "isVisible": 1
+                "isVisible": 1,
+                "isHistorized": 1
             },
             "Battery-VoltToPercent": {
                 "use": "inf_batteryVoltToPercent",
