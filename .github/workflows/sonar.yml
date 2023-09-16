@@ -1,5 +1,4 @@
 # This is a basic workflow to help you get started with Actions
-
 name: Sonar
 
 # Controls when the action will run. Triggers the workflow on push or pull request
@@ -26,8 +25,11 @@ jobs:
                 with:
                     fetch-depth: 0
 
+            -   name: phplint
+                uses: michaelw90/PHP-Lint@master
+
             -   name: SonarCloud Scan
-                uses: SonarSource/sonarcloud-github-action@master
+                uses: SonarSource/sonarcloud-github-action@v4
                 env:
                     GITHUB_TOKEN: ${{ secrets.GH_TOKEN_FOR_SONAR }}
                     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -44,3 +46,6 @@ jobs:
                         -Dsonar.projectKey=edgd1er_Abeille
                         -Dsonar.verbose=true
                         -Dsonar.exclusions='images/,.git/**,.idea/**,.github/**,.scannerwork/**'
+                        -Dsonar.c.file.suffixes=-
+                        -Dsonar.cpp.file.suffixes=-
+                        -Dsonar.objc.file.suffixes=-
