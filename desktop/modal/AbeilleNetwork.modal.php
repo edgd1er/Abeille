@@ -69,6 +69,10 @@
         position: absolute;
     }
 
+    #idLinksGraphTabSVG {
+        height: 100%;
+        width: 100%
+    }
     #idLinksGraphTabSVG >svg {
         height: 100%;
         width: 100%
