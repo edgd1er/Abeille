@@ -21,15 +21,14 @@ jobs:
         # Steps represent a sequence of tasks that will be executed as part of the job
         steps:
             # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-            -   uses: actions/checkout@v5
+            -   uses: actions/checkout@v6
                 # Disabling shallow clone is recommended for improving relevancy of reporting
                 with:
                     fetch-depth: 0
 
             -   name: SonarCloud Scan
-                uses: SonarSource/sonarcloud-github-action@master
+                uses: SonarSource/sonarqube-scan-action@v6
                 env:
-                    GITHUB_TOKEN: ${{ secrets.GH_TOKEN_FOR_SONAR }}
                     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
                 with:
                     # Additional arguments to the sonarcloud scanner
@@ -44,3 +43,6 @@ jobs:
                         -Dsonar.projectKey=edgd1er_Abeille
                         -Dsonar.verbose=true
                         -Dsonar.exclusions='images/,.git/**,.idea/**,.github/**,.scannerwork/**'
+                        -Dsonar.c.file.suffixes=-
+                        -Dsonar.cpp.file.suffixes=-
+                        -Dsonar.objc.file.suffixes=-
