@@ -1,13 +1,12 @@
 # Text files must always keep LF
 * text eol=lf
-
 # The following files are binaries and should not be touched
 *.bin binary
 *.png binary
 *.zip binary
-*.exe binary
+*.exe filter=lfs diff=lfs merge=lfs -text
 *.jpg binary
-*.pdf binary
+*.pdf filter=lfs diff=lfs merge=lfs -text
 *.ppt binary
 *.xlsx binary
 *.docx binary
@@ -19,6 +18,9 @@
 plugin_info/Abeille.md5 merge=keepMine
 plugin_info/Abeille.version merge=keepTheir
 plugin_info/info.json merge=keepTheir
+*.xls filter=lfs diff=lfs merge=lfs -text
+*.docs filter=lfs diff=lfs merge=lfs -text
+*.mov filter=lfs diff=lfs merge=lfs -text
 *.png filter=lfs diff=lfs merge=lfs -text
 *.jpg filter=lfs diff=lfs merge=lfs -text
 *.jpeg filter=lfs diff=lfs merge=lfs -text
@@ -28,7 +30,6 @@ plugin_info/info.json merge=keepTheir
 *.wav filter=lfs diff=lfs merge=lfs -text
 *.mp3 filter=lfs diff=lfs merge=lfs -text
 *.mp4 filter=lfs diff=lfs merge=lfs -text
-*.mov filter=lfs diff=lfs merge=lfs -text
 *.avi filter=lfs diff=lfs merge=lfs -text
 *.zip filter=lfs diff=lfs merge=lfs -text
 *.tar filter=lfs diff=lfs merge=lfs -text
@@ -36,7 +37,5 @@ plugin_info/info.json merge=keepTheir
 *.rar filter=lfs diff=lfs merge=lfs -text
 *.fbx filter=lfs diff=lfs merge=lfs -text
 *.obj filter=lfs diff=lfs merge=lfs -text
-*.exe filter=lfs diff=lfs merge=lfs -text
 *.bin filter=lfs diff=lfs merge=lfs -text
-*.pdf filter=lfs diff=lfs merge=lfs -text
 *.docx filter=lfs diff=lfs merge=lfs -text

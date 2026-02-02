@@ -15,10 +15,18 @@
         "type": "Xiaomi temp-humidity-pressure sensor",
         "commands": {
             "Battery-Volt": {
-                "use": "inf_batteryVoltAndPercent-285-300"
+                "use": "inf_batteryVoltAndPercent-285-300",
+                "isHistorized": 1,
+                "isVisible": 1,
+                "configuration": {
+                    "minValue": "2.8",
+                    "maxValue": "3.2"
+                }
             },
             "Battery-Percent": {
-                "use": "inf_zbAttr-0001-BatteryPercent"
+                "use": "inf_zbAttr-0001-BatteryPercent",
+                "isHistorized": 1,
+                "isVisible": 1
             },
             "Temperature": {
                 "use": "inf_zbAttr-0402-MeasuredValue",
@@ -34,12 +42,23 @@
                 "use": "inf_zbAttr-0403-MeasuredValue",
                 "calculValueOffset": "#value#*10",
                 "unit": "hPa",
-                "isVisible": 1
+                "isVisible": 1,
+                "isHistorized": 1,
+                "configuration": {
+                    "minValue": "960",
+                    "maxValue": "1065"
+                }
             },
             "Pressure-Scaled": {
                 "use": "inf_zbAttr-0403-ScaledValue",
                 "calculValueOffset": "#value#*10",
                 "unit": "hPa"
+                "isHistorized": 1,
+                "isVisible": 1,
+                "configuration": {
+                    "minValue": "960",
+                    "maxValue": "1065"
+                }
             }
         },
         "private": {
