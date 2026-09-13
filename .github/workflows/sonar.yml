@@ -26,7 +26,10 @@ jobs:
                     fetch-depth: 0
 
             -   name: phplint
-                uses: michaelw90/PHP-Lint@master
+                uses: overtrue/phplint@main
+                with:
+                    path: .
+                    options: --exclude=vendor
 
             -   name: SonarCloud Scan
                 uses: SonarSource/sonarqube-scan-action@v7
