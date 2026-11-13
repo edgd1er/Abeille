@@ -86,6 +86,20 @@
             "forceReturnLineAfter": "1"
         }
     },
+    "Get Inclusion Status": {
+        "name": "Get Inclusion Status",
+        "isHistorized": "0",
+        "isVisible": "1",
+        "Type": "action",
+        "subType": "other",
+        "configuration": {
+            "topic": "permitJoin",
+            "request": "Status"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        }
+    },
     "storeScene": {
         "name": "storeScene",
         "isVisible": "0",
